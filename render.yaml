@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: rag-csa
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: CHROMA_URL
+        sync: false

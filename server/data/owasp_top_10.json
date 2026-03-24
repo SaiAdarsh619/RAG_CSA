@@ -1,0 +1,86 @@
+[
+    {
+        "id": "A01:2021",
+        "title": "Broken Access Control",
+        "description": "Access control enforces policy such that users cannot act outside of their intended permissions. Failures typically lead to unauthorized information disclosure, modification, or destruction of data.",
+        "indicators": "Missing authorization checks, IDOR (accessing resources by user-supplied ID without permission), CORS misconfiguration allowing unauthorized API access, privilege escalation, accessing admin pages as regular user.",
+        "prevention": "Deny by default except for public resources. Implement access control mechanisms once and reuse. Enforce record ownership. Disable directory listing. Log access control failures and alert admins."
+    },
+    {
+        "id": "A02:2021",
+        "title": "Cryptographic Failures",
+        "description": "Failures related to cryptography which often lead to sensitive data exposure. Includes transmitting data in clear text, using old or weak cryptographic algorithms, and improper key management.",
+        "indicators": "Data transmitted in plain text (HTTP, FTP), use of old or weak algorithms (MD5, SHA1, DES), hardcoded encryption keys, missing TLS, storing passwords in plain text or with reversible encryption.",
+        "prevention": "Encrypt all sensitive data at rest and in transit using TLS. Use strong algorithms (AES-256, bcrypt, argon2). Never hardcode cryptographic keys. Disable caching for sensitive responses."
+    },
+    {
+        "id": "A03:2021",
+        "title": "Injection",
+        "description": "Injection flaws occur when untrusted data is sent to an interpreter as part of a command or query. Includes SQL injection, NoSQL injection, OS command injection, LDAP injection, and XSS.",
+        "indicators": "String concatenation in SQL queries, use of eval(), exec(), system(), child_process.exec with user input, template literals in queries without parameterization, innerHTML with user data.",
+        "prevention": "Use parameterized queries or prepared statements. Use ORMs. Validate and sanitize all user inputs. Use allowlists for input validation. Escape special characters in output."
+    },
+    {
+        "id": "A04:2021",
+        "title": "Insecure Design",
+        "description": "Flaws in the design and architecture of the application. Unlike implementation bugs, insecure design cannot be fixed by a perfect implementation — the design itself is flawed.",
+        "indicators": "Missing rate limiting on sensitive operations, no CAPTCHA on login/registration, business logic that can be bypassed, lack of input validation at the design level, missing threat modeling.",
+        "prevention": "Use secure design patterns. Establish a secure development lifecycle. Perform threat modeling. Write unit and integration tests for security-critical flows. Use reference architectures."
+    },
+    {
+        "id": "A05:2021",
+        "title": "Security Misconfiguration",
+        "description": "Improperly configured security settings. Includes unnecessary features enabled, default accounts/passwords, overly informative error handling, and missing security hardening.",
+        "indicators": "DEBUG=true in production, CORS set to *, default admin credentials, verbose error messages exposing stack traces, unnecessary HTTP methods enabled, missing security headers.",
+        "prevention": "Implement a repeatable hardening process. Remove unused features and frameworks. Review and update configurations. Use automated tools to verify configuration. Implement proper error handling."
+    },
+    {
+        "id": "A06:2021",
+        "title": "Vulnerable and Outdated Components",
+        "description": "Using components (libraries, frameworks) with known vulnerabilities. Includes not knowing versions of components used and not scanning for vulnerabilities regularly.",
+        "indicators": "Outdated npm/pip/maven packages, deprecated libraries, known CVEs in dependencies, not running npm audit or equivalent, using unmaintained packages.",
+        "prevention": "Remove unused dependencies. Monitor versions continuously. Run npm audit / pip audit regularly. Only obtain components from official sources. Prefer signed packages."
+    },
+    {
+        "id": "A07:2021",
+        "title": "Identification and Authentication Failures",
+        "description": "Weaknesses in authentication mechanisms. Includes permitting weak passwords, credential stuffing, missing multi-factor authentication, and improper session management.",
+        "indicators": "Plain text password storage, weak hashing (MD5, SHA1 without salt), hardcoded credentials, session tokens in URLs, missing session timeout, no brute-force protection.",
+        "prevention": "Use bcrypt/argon2 for password hashing. Implement multi-factor authentication. Do not ship with default credentials. Implement rate limiting on login attempts. Use secure session management."
+    },
+    {
+        "id": "A08:2021",
+        "title": "Software and Data Integrity Failures",
+        "description": "Failures related to code and infrastructure that does not protect against integrity violations. Includes insecure deserialization, using untrusted plugins or CDNs without integrity verification.",
+        "indicators": "JSON.parse on untrusted input, eval() for deserialization, pickle.loads in Python, loading scripts from CDN without SRI hashes, auto-update without signature verification.",
+        "prevention": "Use digital signatures to verify software/data integrity. Ensure libraries are from trusted repositories. Use SRI for CDN resources. Do not deserialize untrusted data. Review CI/CD pipeline security."
+    },
+    {
+        "id": "A09:2021",
+        "title": "Security Logging and Monitoring Failures",
+        "description": "Without logging and monitoring, security breaches cannot be detected. Insufficient logging, missing alerting, and lack of incident response planning.",
+        "indicators": "No logging of login attempts, access control failures, or input validation failures. Logs stored only locally. No alerting or monitoring. Console.log of sensitive data in production.",
+        "prevention": "Log all login, access control, and server-side input validation failures. Ensure logs have sufficient context for forensics. Use centralized log management. Establish incident response plan."
+    },
+    {
+        "id": "A10:2021",
+        "title": "Server-Side Request Forgery (SSRF)",
+        "description": "SSRF occurs when a web application fetches a remote resource without validating the user-supplied URL. Allows attackers to make the server send requests to internal resources.",
+        "indicators": "User-supplied URLs passed to HTTP clients (fetch, axios, http.get), accessing internal metadata endpoints, URL redirects without validation, importing data from user-provided URLs.",
+        "prevention": "Sanitize and validate all client-supplied URLs. Enforce URL schemas, ports, and destinations with allowlists. Do not send raw responses to clients. Disable HTTP redirections."
+    },
+    {
+        "id": "CWE-22",
+        "title": "Path Traversal",
+        "description": "Improper limitation of a pathname to a restricted directory. Attackers can use ../ sequences to break out of the intended directory and access arbitrary files on the server.",
+        "indicators": "fs.readFile/fs.readFileSync with user input in the path, path.join with unsanitized user input, '../' sequences not being filtered, serving files based on user-supplied filenames.",
+        "prevention": "Validate and sanitize file paths. Use path.basename() to strip directory components. Use path.resolve() and verify the result is within the expected directory. Use chroot or containers."
+    },
+    {
+        "id": "CWE-79",
+        "title": "Cross-Site Scripting (XSS)",
+        "description": "Injection of malicious scripts into web pages viewed by other users. Includes reflected XSS, stored XSS, and DOM-based XSS. Leads to session hijacking, defacement, and malware distribution.",
+        "indicators": "innerHTML, outerHTML, document.write() with user data, dangerouslySetInnerHTML in React, unescaped template rendering (EJS without <%- %>), v-html in Vue without sanitization.",
+        "prevention": "Escape output encoding appropriate to the context (HTML, JS, URL, CSS). Use textContent instead of innerHTML. Implement Content Security Policy (CSP). Use sanitization libraries like DOMPurify."
+    }
+]
